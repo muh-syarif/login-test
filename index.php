@@ -1,13 +1,3 @@
-<?php
-    session_start();
-    if (!isset($_SESSION['username'])) {
-        header('location:/test-login/?pesan_harus_login');
-        } else {
-            $nama = $_SESSION['nama'];
-            $password = $_SESSION['password'];
-        }
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="desain.css">
+    <link rel="stylesheet" href="desain.css" type="text/css">
     
 </head>
 
@@ -33,83 +23,121 @@
         </div>
 
         <div class="col-sm-4">
+            <div class="alert alert-info mg-top-30">
+                Form login dibuat oleh <b>Syarif</b> - Back End Test
+            </div>
+
+            <?php
+            if (isset($_GET['pesan_password_salah'])) {
+                echo '
+                <div class="alert alert-danger">
+                    <b>Maaf</b>. Username & password yang anda masukan salah!
+                </div>
+                ';
+            } elseif (isset($_GET['pesan_harus_login'])) {
+                echo '
+                <div class="alert alert-danger">
+                    <b>Maaf</b>. Anda harus login terlebih dahulu!
+                </div>
+                ';
+            } elseif (isset($_GET['nama_tidak_sesuai'])) {
+                echo '
+                <div class="alert alert-danger">
+                    <b>Maaf</b>. Nama harus berupa huruf!
+                </div>
+                ';
+            } elseif (isset($_GET['string_tidak_diperbolehkan'])) {
+                echo '
+                <div class="alert alert-danger">
+                    <b>Maaf</b>. String tidak dipebolehkan!
+                </div>
+                ';
+            }
+            ?>
             
-            <div class="alert alert-success mg-top-30">
-                Hai <b><?php echo $_SESSION['nama']; ?></b> Kamu berhasil login dengan menggunakan username dan password <b><?php echo $password ?></b>
-            </div>
-
             <div class="my-latar-form">
-                <h3 class="my-title-top text-center">Selamat Datang!!!</h3>
+                
+                <h3 class="my-title-top text-center">Form Login</h3>
+                <form action="proses.php" method="post">
 
-                    <?php
-                        date_default_timezone_set("Asia/Jakarta");
-
-                        function IP() {
-                            $ipaddress = '';
-                            if (getenv('HTTP_CLIENT_IP'))
-                                $ipaddress = getenv('HTTP_CLIENT_IP');
-                            else if(getenv('HTTP_X_FORWARDED_FOR'))
-                                $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
-                            else if(getenv('HTTP_X_FORWARDED'))
-                                $ipaddress = getenv('HTTP_X_FORWARDED');
-                            else if(getenv('HTTP_FORWARDED_FOR'))
-                                $ipaddress = getenv('HTTP_FORWARDED_FOR');
-                            else if(getenv('HTTP_FORWARDED'))
-                                $ipaddress = getenv('HTTP_FORWARDED');
-                            else if(getenv('REMOTE_ADDR'))
-                                $ipaddress = getenv('REMOTE_ADDR');
-                            else
-                                $ipaddress = 'IP Tidak Dikenali';
+                    <div class="input-group mg-top-10">
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-pencil"></i>
                         
-                            return $ipaddress;
-                        }
-                            $ipaddress = $_SERVER['REMOTE_ADDR'];
-                            $tgl = date('d-m-Y');
-                            $jam = date('h-i-s');
-                            echo "<hr class='hr'><b>Nama = </b>".$nama;
-                            echo "<hr class='hr'><b>Tanggal Login = </b>".$tgl;
-                            echo "<hr class='hr'><b>Jam Login = </b>".$jam;
-                            echo "<hr class='hr'><b>Ip Address</b> = ";
-                            echo IP();
-                            echo "<hr class='hr'><b>Lokasi Sekarang</b> = <img src='https://wpamelia.com/wp-content/uploads/2018/11/ezgif-2-6d0b072c3d3f.gif' style='width:60px;height:30px;'>";
-                            echo "<hr class='hr'><b>Browser</b> = ";
-                            echo $_SERVER['HTTP_USER_AGENT'];
-                            echo "<hr class='hr'><b>Sistem Operasi</b> = ";
-                            echo php_uname();
-                            echo "<hr class='hr'>";
+                        </span>
+                        <input id="nama" type="text" class="form-control" name="nama" placeholder="Masukkan Nama Kamu"
+                        minlength="4" maxlength="15" required="required">
+                    </div>
 
-                        if (isset($_SESSION['username'])) {
-                            $file = fopen("data.txt","a");
-                            $ip_address = IP();
-                            fwrite($file, "Nama = ");
-                            fwrite($file, $nama);
-                            fwrite($file, PHP_EOL);
-                            fwrite($file, "Tanggal Login = ");
-                            fwrite($file, $tgl);
-                            fwrite($file, PHP_EOL);
-                            fwrite($file, "Jam Login = ");
-                            fwrite($file, $jam);
-                            fwrite($file, PHP_EOL);
-                            fwrite($file, "Ip Address = ");  
-                            fwrite($file, $ip_address);
-                            fwrite($file, PHP_EOL);
-                            fwrite($file, "Browser = ");  
-                            fwrite($file, $_SERVER['HTTP_USER_AGENT']);
-                            fwrite($file, PHP_EOL);
-                            fwrite($file, "Sistem Operasi = ");
-                            fwrite($file, php_uname());
-                            fwrite($file, PHP_EOL);
-                            fwrite($file, "-----------------------------------------");
-                            fwrite($file, PHP_EOL);
-                            fclose($file);
-                        } else {
-                            header('location:/test-login/?pesan_harus_login');
-                        }
-                    ?> 
+                    <div class="input-group mg-top-10">
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-user"></i>
+                        
+                        </span>
+                        <input id="username" type="text" class="form-control" name="username" placeholder="Masukkan Username" maxlength="15" required>
+                    </div>
 
-                <a href="/test-login/logout.php" class="btn btn-danger btn-block mg-top-10">Keluar</a>
+                    <div class="input-group mg-top-10">
+                        <span class="input-group-addon">
+                            <i class="glyphicon glyphicon-lock"></i>
+                        </span>
+                        <input id="password" type="password" class="form-control" name="password" placeholder="Masukkan Password" maxlength="15" required>
+                    </div>
+
+                    <input id="submit" type="submit" class="btn btn-info btn-block mg-top-10" name="submit" value="Masuk">
+            
+                </form>
 
             </div>
+
+            <button type="button" class="btn btn-danger mg-top-10" data-toggle="modal" data-target="#peringatan">Password Disini</button>
+
+                <div id="peringatan" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Password</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Username : <b>backendtest</b></p>
+                            <p>Password : <b>backendtest</b></p>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Keluar</button>
+                        </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-danger mg-top-10" data-toggle="modal" data-target="#peringatan2">Mohon Baca!</button>
+
+                <div id="peringatan2" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Mohon Baca!</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Tidak ada bug di website ini!</p>
+                            <p>Terakhir update : 12 Mei 2020 , 16:13</p>
+                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Keluar</button>
+                        </div>
+                        </div>
+
+                    </div>
+                </div>
+                
+                <a href="/test-login/data.txt" type="button" class="btn btn-danger mg-top-10">Data User yang Login</a>
+                <a href="https://github.com/muh-syarif/login-test/" type="button" class="btn btn-danger mg-top-10">Lihat File Login Disini!</a>
+
         </div>
 
         <div class="col-sm-4">
@@ -117,3 +145,4 @@
 
     </div>
 </div>
+
